@@ -6,7 +6,7 @@ import { QuickActionsPanel } from "../components/quick-actions-panel";
 
 export function DashboardView() {
   return (
-    <div className="relative">
+    <div className="relative h-full overflow-hidden">
       <PageHeader title="Home" className="lg:hidden" />
       <HeroPattern />
       <div className="relative space-y-8 p-4 lg:p-16">
