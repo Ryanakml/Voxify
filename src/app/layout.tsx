@@ -33,7 +33,10 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
-        <body className={`${inter.variable} ${geistMono.variable} antialiased`}>
+        <body
+          className={`${inter.variable} ${geistMono.variable} antialiased`}
+          suppressHydrationWarning
+        >
           <header className="flex justify-end items-center p-4 gap-4 h-16">
             <Show when="signed-out">
               <SignInButton />
@@ -43,12 +46,9 @@ export default function RootLayout({
                 </button>
               </SignUpButton>
             </Show>
-            <Show when="signed-in">
-              <UserButton />
-            </Show>
           </header>
 
-          {children}
+          {children}  
           <Toaster />
         </body>
       </html>
