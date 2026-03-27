@@ -1,7 +1,6 @@
 import { TextToSpeechDetailView } from "@/features/text-to-speech/views/text-to-speech-detail-view";
 import { HydrateClient, prefetch, trpc } from "@/trpc/server";
 
-
 export default async function TextToSpeechDetailPage({
   params,
 }: {
@@ -11,6 +10,7 @@ export default async function TextToSpeechDetailPage({
 
   prefetch(trpc.generations.getById.queryOptions({ id: generationId }));
   prefetch(trpc.voices.getAll.queryOptions());
+  prefetch(trpc.generations.getAll.queryOptions());
 
   return (
     <HydrateClient>
