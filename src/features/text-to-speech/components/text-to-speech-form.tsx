@@ -1,5 +1,3 @@
-
-
 interface Slider {
   id: "temperature" | "topP" | "topK" | "repetitionPenalty";
   label: string;
