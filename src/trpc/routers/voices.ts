@@ -33,39 +33,63 @@ export const voicesRouter = createTRPCRouter({
           }
         : {};
 
-      const [custom, system] = await Promise.all([
-        prisma.voice.findMany({
-          where: {
-            variant: "CUSTOM",
-            orgId: ctx.orgId,
-            ...searchFilter,
-          },
-          orderBy: { createdAt: "desc" },
-          select: {
-            id: true,
-            name: true,
-            description: true,
-            category: true,
-            language: true,
-            variant: true,
-          },
-        }),
-        prisma.voice.findMany({
-          where: {
-            variant: "SYSTEM",
-            ...searchFilter,
-          },
-          orderBy: { name: "asc" },
-          select: {
-            id: true,
-            name: true,
-            description: true,
-            category: true,
-            language: true,
-            variant: true,
-          },
-        }),
-      ]);
+      const runGetAll = () =>
+        Promise.all([
+          prisma.voice.findMany({
+            where: {
+              variant: "CUSTOM",
+              orgId: ctx.orgId,
+              ...searchFilter,
+            },
+            orderBy: { createdAt: "desc" },
+            select: {
+              id: true,
+              name: true,
+              description: true,
+              category: true,
+              language: true,
+              variant: true,
+            },
+          }),
+          prisma.voice.findMany({
+            where: {
+              variant: "SYSTEM",
+              ...searchFilter,
+            },
+            orderBy: { name: "asc" },
+            select: {
+              id: true,
+              name: true,
+              description: true,
+              category: true,
+              language: true,
+              variant: true,
+            },
+          }),
+        ]);
+
+      const isConnectionClosedError = (error: unknown) => {
+        const message = error instanceof Error ? error.message : String(error);
+        return (
+          message.includes("Server has closed the connection") ||
+          message.includes("P1017")
+        );
+      };
+
+      let custom: Awaited<ReturnType<typeof runGetAll>>[0];
+      let system: Awaited<ReturnType<typeof runGetAll>>[1];
+
+      try {
+        [custom, system] = await runGetAll();
+      } catch (error) {
+        if (!isConnectionClosedError(error)) {
+          throw error;
+        }
+
+        await prisma.$disconnect().catch(() => {});
+        await prisma.$connect().catch(() => {});
+        [custom, system] = await runGetAll();
+      }
 
       return { custom, system };
     }),

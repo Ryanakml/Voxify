@@ -8,9 +8,11 @@ export default async function TextToSpeechDetailPage({
 }) {
   const { generationId } = await params;
 
-  prefetch(trpc.generations.getById.queryOptions({ id: generationId }));
-  prefetch(trpc.voices.getAll.queryOptions());
-  prefetch(trpc.generations.getAll.queryOptions());
+  await Promise.all([
+    prefetch(trpc.generations.getById.queryOptions({ id: generationId })),
+    prefetch(trpc.voices.getAll.queryOptions()),
+    prefetch(trpc.generations.getAll.queryOptions()),
+  ]);
 
   return (
     <HydrateClient>
