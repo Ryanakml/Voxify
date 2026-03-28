@@ -36,6 +36,14 @@ export function VoiceSelector() {
         }
       : voices[0];
 
+  const activeVoiceId = currentVoice?.id ?? null;
+  const visibleCustomVoices = activeVoiceId
+    ? customVoices.filter((v) => v.id !== activeVoiceId)
+    : customVoices;
+  const visibleSystemVoices = activeVoiceId
+    ? systemVoices.filter((v) => v.id !== activeVoiceId)
+    : systemVoices;
+
   return (
     <Field>
       <FieldLabel>Voice style</FieldLabel>
@@ -75,14 +83,28 @@ export function VoiceSelector() {
             </SelectGroup>
           )}
 
-          {(customVoices.length > 0 || systemVoices.length > 0) && (
+          {(visibleCustomVoices.length > 0 || visibleSystemVoices.length > 0) && (
             <SelectSeparator />
           )}
 
-          {customVoices.length > 0 && (
+          {visibleCustomVoices.length > 0 && (
             <SelectGroup>
               <SelectLabel>Team Voices</SelectLabel>
-              {customVoices.map((v) => (
+              {visibleCustomVoices.map((v) => (
+                <SelectItem key={v.id} value={v.id}>
+                  <VoiceAvatar seed={v.id} name={v.name} />
+                  <span className="truncate text-sm font-medium">
+                    {v.name} – {VOICE_CATEGORY_LABELS[v.category]}
+                  </span>
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          )}
+
+          {visibleSystemVoices.length > 0 && (
+            <SelectGroup>
+              <SelectLabel>Built-in Voices</SelectLabel>
+              {visibleSystemVoices.map((v) => (
                 <SelectItem key={v.id} value={v.id}>
                   <VoiceAvatar seed={v.id} name={v.name} />
                   <span className="truncate text-sm font-medium">
