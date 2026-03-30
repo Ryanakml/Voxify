@@ -14,6 +14,14 @@ interface Prompt {
     prompt: string;
 }
 
+const placeholders = [
+    "product demo script...",
+    "podcast intro...",
+    "customer support greeting...",
+    "video narration...",
+    "learning content...",
+];
+
 export default function HeroSection() {
     const router = useRouter();
     const [textInput, setTextInput] = useState("");
@@ -37,15 +45,6 @@ export default function HeroSection() {
             setIsPlaying(true);
         }, 1200);
     };
-
-    const placeholders = [
-        "product demo script...",
-        "podcast intro...",
-        "customer support greeting...",
-        "video narration...",
-        "learning content...",
-    ];
-
 
     const prompts: Prompt[] = [
         {
@@ -99,23 +98,26 @@ export default function HeroSection() {
         if (textInput) return;
 
         const currentWord = placeholders[textIndex];
+        let timeout: ReturnType<typeof setTimeout> | undefined;
 
         if (!deleting && charIndex === currentWord.length) {
-            setTimeout(() => setDeleting(true), 2000);
-            return;
+            timeout = setTimeout(() => setDeleting(true), 2000);
+        } else if (deleting && charIndex === 0) {
+            timeout = setTimeout(() => {
+                setDeleting(false);
+                setTextIndex((prev) => (prev + 1) % placeholders.length);
+            }, 50);
+        } else {
+            timeout = setTimeout(() => {
+                setCharIndex((prev) => prev + (deleting ? -1 : 1));
+            }, 50);
         }
 
-        if (deleting && charIndex === 0) {
-            setDeleting(false);
-            setTextIndex((prev) => (prev + 1) % placeholders.length);
-            return;
-        }
-
-        const timeout = setTimeout(() => {
-            setCharIndex((prev) => prev + (deleting ? -1 : 1));
-        }, 50);
-
-        return () => clearTimeout(timeout);
+        return () => {
+            if (timeout) {
+                clearTimeout(timeout);
+            }
+        };
     }, [charIndex, deleting, textIndex, textInput]);
 
     useEffect(() => {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useEffectEvent, useRef, useState } from "react";
 import { useInView } from "motion/react";
 
 interface SpecialTextProps {
@@ -51,14 +51,14 @@ export function SpecialText({
     startTimeoutRef.current = null;
   }
 
-  function startAnimation() {
+  const startAnimation = useEffectEvent(() => {
     setHasStarted(true);
     setDisplayText(" ".repeat(text.length));
     setCurrentPhase("phase1");
     setAnimationStep(0);
-  }
+  });
 
-  const runPhase1 = () => {
+  const runPhase1 = useEffectEvent(() => {
     const maxSteps = text.length * 2;
     const currentLength = Math.min(animationStep + 1, text.length);
 
@@ -80,9 +80,9 @@ export function SpecialText({
       setCurrentPhase("phase2");
       setAnimationStep(0);
     }
-  };
+  });
 
-  const runPhase2 = () => {
+  const runPhase2 = useEffectEvent(() => {
     const revealedCount = Math.floor(animationStep / 2);
     const chars: string[] = [];
 
@@ -113,22 +113,24 @@ export function SpecialText({
         intervalRef.current = null;
       }
     }
-  };
+  });
+
+  const resetAnimation = useEffectEvent(() => {
+    setDisplayText(" ".repeat(text.length));
+    setCurrentPhase("phase1");
+    setAnimationStep(0);
+  });
 
   useEffect(() => {
     if (shouldAnimate && !hasStarted) {
       clearStartTimeout();
-      if (delay <= 0) {
-        startAnimation();
-        return;
-      }
       startTimeoutRef.current = window.setTimeout(() => {
         startTimeoutRef.current = null;
         startAnimation();
-      }, delay * 1000);
+      }, Math.max(delay, 0) * 1000);
     }
     return () => clearStartTimeout();
-  }, [shouldAnimate, hasStarted, delay, text.length]);
+  }, [shouldAnimate, hasStarted, delay]);
 
   useEffect(() => {
     if (!hasStarted) {
@@ -156,9 +158,17 @@ export function SpecialText({
 
   useEffect(() => {
     if (hasStarted) {
-      setDisplayText(" ".repeat(text.length));
-      setCurrentPhase("phase1");
-      setAnimationStep(0);
+      const resetTimeout = window.setTimeout(() => {
+        resetAnimation();
+      }, 0);
+
+      return () => {
+        window.clearTimeout(resetTimeout);
+        clearStartTimeout();
+        if (intervalRef.current) {
+          clearInterval(intervalRef.current);
+        }
+      };
     }
 
     return () => {

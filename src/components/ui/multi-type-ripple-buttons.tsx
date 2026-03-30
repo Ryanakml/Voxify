@@ -8,6 +8,8 @@ interface RippleState {
   color: string;
 }
 
+type RippleStyle = CSSProperties & Record<"--ripple-duration", string>;
+
 interface RippleButtonProps {
   children: ReactNode;
   onClick?: (event: MouseEvent<HTMLButtonElement>) => void;
@@ -171,8 +173,8 @@ const RippleButton: React.FC<RippleButtonProps> = ({
           style={{
             left: ripple.x, top: ripple.y, width: ripple.size, height: ripple.size,
             backgroundColor: ripple.color,
-            ['--ripple-duration' as any]: `${rippleDuration}ms`,
-          } as CSSProperties}
+            "--ripple-duration": `${rippleDuration}ms`,
+          } as RippleStyle}
         />
       ))}
     </div>

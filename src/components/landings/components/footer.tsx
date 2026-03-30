@@ -20,7 +20,7 @@ export default function Footer() {
       />
       <div className="grid grid-cols-1 gap-14 sm:grid-cols-2 lg:grid-cols-3">
         <div className="sm:col-span-2 lg:col-span-1">
-          <a href="/">
+          <Link href="/">
             <Image
               src="/assets/logo.svg"
               alt="Logo"
@@ -28,7 +28,7 @@ export default function Footer() {
               height={26}
               className="h-7 w-auto"
             />
-          </a>
+          </Link>
           <p className="mt-6 text-sm/7">
             Voxify helps teams turn text into natural, production-ready speech
             for ads, product demos, courses, podcasts, and support workflows.
@@ -43,12 +43,12 @@ export default function Footer() {
             <a className="transition hover:text-slate-600" href="#pricing">
               Pricing
             </a>
-            <a className="transition hover:text-slate-600" href="/sign-in">
+            <Link className="transition hover:text-slate-600" href="/sign-in">
               Sign in
-            </a>
-            <a className="transition hover:text-slate-600" href="/dashboard">
+            </Link>
+            <Link className="transition hover:text-slate-600" href="/dashboard">
               Dashboard
-            </a>
+            </Link>
           </div>
         </div>
         <div>
@@ -77,7 +77,7 @@ export default function Footer() {
       </div>
       <div className="mt-6 flex flex-col items-center justify-between gap-4 border-t border-slate-200 py-4 md:flex-row">
         <p className="text-center">
-          Copyright 2026 © <a href="/">Voxify</a> All Right Reserved.
+          Copyright 2026 © <Link href="/">Voxify</Link> All Right Reserved.
         </p>
         <div className="flex items-center gap-4">
           <Link href="/">Privacy Policy</Link>

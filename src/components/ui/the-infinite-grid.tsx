@@ -1,9 +1,9 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import { cn } from "@/lib/utils";
 import { 
   motion, 
+  type MotionValue,
   useMotionValue, 
-  useTransform, 
   useMotionTemplate, 
   useAnimationFrame 
 } from "framer-motion";
@@ -96,7 +96,7 @@ export const Component = ({ className, decorative = false }: InfiniteGridProps) 
   );
 };
 
-const GridPattern = ({ offsetX, offsetY }: { offsetX: any, offsetY: any }) => {
+const GridPattern = ({ offsetX, offsetY }: { offsetX: MotionValue<number>, offsetY: MotionValue<number> }) => {
   return (
     <svg className="w-full h-full">
       <defs>

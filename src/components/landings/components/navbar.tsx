@@ -42,9 +42,9 @@ export default function Navbar() {
         <>
             <nav className={`fixed top-0 left-0 w-full z-40 bg-white/60 backdrop-blur-md transition-transform duration-400 ${showNavbar ? "translate-y-0" : "-translate-y-full"}`}>
                 <div className="flex items-center justify-between px-4 py-4 md:px-16 lg:px-24 xl:px-32 border-b border-gray-200">
-                    <a href="/">
+                    <Link href="/">
                         <Image src="/assets/logo.svg" alt="Logo" width={68} height={26} className="h-7 w-auto md:mr-31" />
-                    </a>
+                    </Link>
 
                     <div className="hidden md:flex items-center gap-8 text-gray-600">
                         {navLinks.map((link) => (

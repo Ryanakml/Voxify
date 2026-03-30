@@ -111,14 +111,15 @@ export const LoopsPricingSlider: React.FC = () => {
               ? "Free tier includes up to 300 credits so you can test voices, workflows, and output quality before upgrading."
               : `Includes up to ${label}. Fast generation, high-quality output, and commercial usage ready for production workflows.`}
           </p>
-          <a
+          <Link
             href="/dashboard/text-to-speech"
             className="mt-8 inline-flex rounded-lg bg-linear-to-b from-gray-600 to-gray-800 px-6 py-3 text-sm font-medium text-white transition hover:from-gray-700 hover:to-gray-900"
           >
             {price === 0 ? "Start Free" : "Get Started"}
-          </a>
+          </Link>
         </div>
       </div>
     </section>
   );
 };
+import Link from "next/link";
