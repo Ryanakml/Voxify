@@ -19,7 +19,7 @@ export function TextInputPanel() {
     const trimmed = text.trim();
     if (!trimmed) return;
 
-    router.push(`/text-to-speech?text=${encodeURIComponent(trimmed)}`);
+    router.push(`/dashboard/text-to-speech?text=${encodeURIComponent(trimmed)}`);
   };
 
   return (

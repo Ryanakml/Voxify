@@ -3,6 +3,7 @@
 import { OrganizationSwitcher, useClerk, UserButton } from "@clerk/nextjs";
 import {
   AudioLines,
+  Command,
   Headphones,
   Home,
   LayoutGrid,
@@ -10,11 +11,9 @@ import {
   Settings,
   Volume2,
 } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-// Gabungkan semua impor komponen sidebar dalam satu blok yang rapi
 import {
   Sidebar,
   SidebarContent,
@@ -27,7 +26,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
-  SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -47,11 +45,7 @@ interface NavSectionProps {
 function NavSection({ label, items, pathname }: NavSectionProps) {
   return (
     <SidebarGroup>
-      {label && (
-        <SidebarGroupLabel className="text-[13px] uppercase text-muted-foreground">
-          {label}
-        </SidebarGroupLabel>
-      )}
+      {label && <SidebarGroupLabel>{label}</SidebarGroupLabel>}
       <SidebarGroupContent>
         <SidebarMenu>
           {items.map((item) => (
@@ -67,7 +61,39 @@ function NavSection({ label, items, pathname }: NavSectionProps) {
                 }
                 onClick={item.onClick}
                 tooltip={item.title}
-                className="h-9 px-3 py-2 text-[13px] tracking-tight font-medium border border-transparent data-[active=true]:border-border data-[active=true]:shadow-[0px_1px_1px_0px_rgba(44,54,53,0.03),inset_0px_0px_0px_2px_white]"
+              >
+                {item.url ? (
+                  <Link href={item.url}>
+                    <item.icon />
+                    <span>{item.title}</span>
+                  </Link>
+                ) : (
+                  <>
+                    <item.icon />
+                    <span>{item.title}</span>
+                  </>
+                )}
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          ))}
+        </SidebarMenu>
+      </SidebarGroupContent>
+    </SidebarGroup>
+  );
+}
+
+function SecondarySection({ items }: { items: MenuItem[] }) {
+  return (
+    <SidebarGroup className="mt-auto">
+      <SidebarGroupContent>
+        <SidebarMenu>
+          {items.map((item) => (
+            <SidebarMenuItem key={item.title}>
+              <SidebarMenuButton
+                asChild={!!item.url}
+                onClick={item.onClick}
+                size="sm"
+                tooltip={item.title}
               >
                 {item.url ? (
                   <Link href={item.url}>
@@ -96,27 +122,27 @@ export function DashboardSidebar() {
   const mainMenuItems: MenuItem[] = [
     {
       title: "Dashboard",
-      url: "/",
+      url: "/dashboard",
       icon: Home,
     },
     {
       title: "Explore voices",
-      url: "/voices",
+      url: "/dashboard/voices",
       icon: LayoutGrid,
     },
     {
       title: "Text to speech",
-      url: "/text-to-speech",
+      url: "/dashboard/text-to-speech",
       icon: AudioLines,
     },
     {
       title: "Voice cloning",
-      url: "/voice-cloning",
+      url: "/dashboard/voice-cloning",
       icon: Volume2,
     },
   ];
 
-  const othersMenuItems: MenuItem[] = [
+  const secondaryMenuItems: MenuItem[] = [
     {
       title: "Settings",
       icon: Settings,
@@ -130,41 +156,43 @@ export function DashboardSidebar() {
   ];
 
   return (
-    <Sidebar collapsible="icon">
-      <SidebarHeader className="flex flex-col gap-4 pt-4">
-        <div className="flex items-center gap-2 pl-1 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:pl-0">
-          {/* <Image
-            src="/public/voxify.svg"
-            alt="Voxify"
-            width={24}
-            height={24}
-            className="rounded-sm"
-          /> */}
-          <span className="group-data-[collapsible=icon]:hidden font-semibold text-lg tracking-tighter text-foreground">
-            Voxify
-          </span>
-          <SidebarTrigger className="ml-auto lg:hidden" />
-        </div>
+    <Sidebar variant="inset" collapsible="icon">
+      <SidebarHeader>
         <SidebarMenu>
+          <SidebarMenuItem>
+            {/* <SidebarMenuButton size="lg" asChild>
+              <Link href="/">
+                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                  <Command className="size-4" />
+                </div>
+                <div className="grid flex-1 text-left text-sm leading-tight">
+                  <span className="truncate font-medium">Voxify</span>
+                  <span className="truncate text-xs text-muted-foreground">
+                    Workspace
+                  </span>
+                </div>
+              </Link>
+            </SidebarMenuButton> */}
+          </SidebarMenuItem>
           <SidebarMenuItem>
             <OrganizationSwitcher
               hidePersonal
               fallback={
-                <Skeleton className="h-8.5 w-full group-data-[collapsible=icon]:size-8 rounded-md border bg-white" />
+                <Skeleton className="h-8 w-full rounded-md group-data-[collapsible=icon]:size-8" />
               }
               appearance={{
                 elements: {
                   rootBox:
                     "w-full! group-data-[collapsible=icon]:w-auto! group-data-[collapsible=icon]:flex! group-data-[collapsible=icon]:justify-center!",
                   organizationSwitcherTrigger:
-                    "w-full! justify-between! bg-white! border! border-border! rounded-md! pl-1! pr-2! py-1! gap-3! group-data-[collapsible=icon]:w-auto! group-data-[collapsible=icon]:p-1!",
+                    "h-8! w-full! justify-between! rounded-md! border-0! bg-transparent! px-2! py-1! shadow-none! hover:bg-sidebar-accent! group-data-[collapsible=icon]:w-auto! group-data-[collapsible=icon]:p-1!",
                   organizationPreview: "gap-2!",
-                  organizationPreviewAvatarBox: "size-6! rounded-sm!",
+                  organizationPreviewAvatarBox: "size-5! rounded-sm!",
                   organizationPreviewTextContainer:
-                    "text-xs! tracking-tight! font-medium! text-foreground! group-data-[collapsible=icon]:hidden!",
-                  organizationPreviewMainIdentifier: "text-[13px]!",
+                    "text-xs! font-medium! text-foreground! group-data-[collapsible=icon]:hidden!",
+                  organizationPreviewMainIdentifier: "text-xs!",
                   organizationSwitcherTriggerIcon:
-                    "size-4! text-sidebar-foreground! group-data-[collapsible=icon]:hidden!",
+                    "size-4! text-sidebar-foreground/70! group-data-[collapsible=icon]:hidden!",
                 },
               }}
             />
@@ -172,35 +200,36 @@ export function DashboardSidebar() {
         </SidebarMenu>
       </SidebarHeader>
 
-      <div className="border-b border-dashed border-border" />
       <SidebarContent>
-        <NavSection items={mainMenuItems} pathname={pathname} />
+        <NavSection label="Platform" items={mainMenuItems} pathname={pathname} />
+        <SecondarySection items={secondaryMenuItems} />
       </SidebarContent>
-      <div className="border-b border-dashed border-border" />
-      <SidebarFooter className="gap-3 py-3">
+
+      <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
             <UserButton
               showName
               fallback={
-                <Skeleton className="h-8.5 w-full group-data-[collapsible=icon]:size-8 rounded-md border border-border bg-white" />
+                <Skeleton className="h-8 w-full rounded-md group-data-[collapsible=icon]:size-8" />
               }
               appearance={{
                 elements: {
                   rootBox:
                     "w-full! group-data-[collapsible=icon]:w-auto! group-data-[collapsible=icon]:flex! group-data-[collapsible=icon]:justify-center!",
                   userButtonTrigger:
-                    "w-full! justify-between! bg-white! border! border-border! rounded-md! pl-1! pr-2! py-1! shadow-[0px_1px_1.5px_0px_rgba(44,54,53,0.03)]! group-data-[collapsible=icon]:w-auto! group-data-[collapsible=icon]:p-1! group-data-[collapsible=icon]:after:hidden! [--border:color-mix(in_srgb,transparent,var(--clerk-color-neutral,#000000)_15%)]!",
+                    "h-12! w-full! justify-between! rounded-md! border-0! bg-transparent! px-2! py-1! shadow-none! hover:bg-sidebar-accent! data-[state=open]:bg-sidebar-accent! group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-1! group-data-[collapsible=icon]:after:hidden!",
                   userButtonBox: "flex-row-reverse! gap-2!",
                   userButtonOuterIdentifier:
-                    "text-[13px]! tracking-tight! font-medium! text-foreground! pl-0! group-data-[collapsible=icon]:hidden!",
-                  userButtonAvatarBox: "size-6!",
+                    "text-sm! font-medium! text-foreground! pl-0! group-data-[collapsible=icon]:hidden!",
+                  userButtonAvatarBox: "size-8! rounded-lg!",
                 },
               }}
             />
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
+
       <SidebarRail />
     </Sidebar>
   );

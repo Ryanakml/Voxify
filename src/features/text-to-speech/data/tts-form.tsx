@@ -45,7 +45,7 @@ export function TextToSpeechForm({
         });
 
         toast.success("Audio generated successfully!");
-        router.push(`/text-to-speech/${data.id}`);
+        router.push(`/dashboard/text-to-speech/${data.id}`);
       } catch (error) {
         const message =
           error instanceof Error ? error.message : "Failed to generate audio";

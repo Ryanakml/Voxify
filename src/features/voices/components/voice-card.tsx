@@ -115,7 +115,7 @@ export function VoiceCard({ voice }: VoiceCardProps) {
       <div className="ml-1 flex shrink-0 items-center gap-1 lg:ml-3 lg:gap-2">
         <Button
           variant="outline"
-          size="icon-sm"
+          size="icon"
           className="rounded-full"
           onClick={togglePlay}
           disabled={isLoading}
@@ -131,14 +131,16 @@ export function VoiceCard({ voice }: VoiceCardProps) {
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="icon-sm" className="rounded-full">
+            <Button variant="outline" size="icon" className="rounded-full">
               <MoreHorizontal className="size-4" />
             </Button>
           </DropdownMenuTrigger>
 
           <DropdownMenuContent align="end">
             <DropdownMenuItem
-              onClick={() => router.push(`/text-to-speech?voiceId=${voice.id}`)}
+              onClick={() =>
+                router.push(`/dashboard/text-to-speech?voiceId=${voice.id}`)
+              }
             >
               <Mic className="size-4 text-foreground" />
               <span className="font-medium">Use this voice</span>
@@ -159,7 +161,6 @@ export function VoiceCard({ voice }: VoiceCardProps) {
             open={showDeleteDialog}
             onOpenChange={setShowDeleteDialog}
           >
-            
             <AlertDialogContent>
               <AlertDialogHeader>
                 <AlertDialogTitle>Delete voice</AlertDialogTitle>

@@ -42,31 +42,12 @@ import {
   Upload,
   X,
 } from "lucide-react";
+
+import {
+  VOICE_CATEGORIES,
+  VOICE_CATEGORY_LABELS,
+} from "@/features/voices/data/voice-categories";
 import { VoiceRecorder } from "./voice-recorder";
-
-/* ========================= */
-/* CONSTANTS                 */
-/* ========================= */
-
-export const VOICE_CATEGORIES = [
-  "GENERAL",
-  "NARRATION",
-  "NEWS",
-  "MEDITATION",
-  "CHARACTERS",
-  "CONVERSATIONAL",
-] as const;
-
-export type VoiceCategory = (typeof VOICE_CATEGORIES)[number];
-
-export const VOICE_CATEGORY_LABELS: Record<VoiceCategory, string> = {
-  GENERAL: "General",
-  NARRATION: "Narration",
-  NEWS: "News",
-  MEDITATION: "Meditation",
-  CHARACTERS: "Characters",
-  CONVERSATIONAL: "Conversational",
-};
 
 const LANGUAGE_OPTIONS = (
   locales.all as Array<{ tag: string; name: string; location?: string }>
@@ -505,7 +486,7 @@ function FileDropzone({
         <Button
           type="button"
           variant="ghost"
-          size="icon-sm"
+          size="icon"
           onClick={togglePlay}
           aria-label={isPlaying ? "Pause preview" : "Play preview"}
         >
@@ -519,7 +500,7 @@ function FileDropzone({
         <Button
           type="button"
           variant="ghost"
-          size="icon-sm"
+          size="icon"
           onClick={() => onFileChange(null)}
           aria-label="Remove file"
         >
